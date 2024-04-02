@@ -3,8 +3,8 @@ import FlatFiles
 defmodule OrganizeFile do
   def arrange_file(filepath) do
     list_all(filepath)
-    |> Enum.each(fn (filepath) ->
-      spawn(fn () ->
+    |> Enum.map(fn filepath ->
+      Task.async(fn ->
         filepath = String.downcase(filepath)
         IO.puts("file path processing >>>>>>>< #{filepath}")
 
@@ -45,6 +45,7 @@ defmodule OrganizeFile do
         end
       end)
     end)
+    |> Enum.each(&(Task.await(&1, :infinity)))
   end
 
   defp mv(src, dest) do

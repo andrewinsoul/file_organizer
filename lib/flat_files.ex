@@ -1,4 +1,5 @@
 defmodule FlatFiles do
+  # Credits: The logic for implementing listing files in a sub-directory was gotten from Sophie DeBenedetto.
   def list_all(filepath) do
     _list_all(filepath)
   end

@@ -20,7 +20,7 @@ defmodule FileOrganizer.MixProject do
   end
 
   defp escript do
-    [main_module: ExampleApp.CLI]
+    [main_module: FileOrganizer.CLI]
   end
 
   # Run "mix help deps" to learn about dependencies.
