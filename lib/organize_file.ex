@@ -21,6 +21,11 @@ defmodule OrganizeFile do
             # move file to subtitles folder
             mv(filepath, "subtitles")
 
+          String.ends_with?(filepath, ".zip") or String.ends_with?(filepath, ".tar") or
+              String.ends_with?(filepath, ".gz") ->
+            # move file to compressed folder
+            mv(filepath, "compressed")
+
           String.ends_with?(filepath, "jpg") or String.ends_with?(filepath, "jpeg") or
             String.ends_with?(filepath, "png") or String.ends_with?(filepath, "gif") or
             String.ends_with?(filepath, "raw") or String.ends_with?(filepath, "tiff") ->
@@ -45,7 +50,7 @@ defmodule OrganizeFile do
         end
       end)
     end)
-    |> Enum.each(&(Task.await(&1, :infinity)))
+    |> Enum.each(&Task.await(&1, :infinity))
   end
 
   defp mv(src, dest) do
