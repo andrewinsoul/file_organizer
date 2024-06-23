@@ -1,6 +1,24 @@
 import FlatFiles
 
 defmodule OrganizeFile do
+  defp determine_file_type(filepath) do
+    image_regex = ~r/\.(png|jpg|svg|gif|ico|jpeg)\z/
+    music_regex = ~r/\.(mp3|aud|ogg|wma|aac)\z/
+    video_regex = ~r/\.(mkv|mp4|flv|mov|webm)\z/
+    doc_regex = ~r/\.(ppt|docx|doc|csv|pdf|xxlx)\z/
+    compressed_regex = ~r/\.(zip|tar|gz)\z/
+    subtitle_regex = ~r/\.(srt)\z/
+    cond do
+      Regex.match?(image_regex, filepath) -> "image"
+      Regex.match?(music_regex, filepath) -> "music"
+      Regex.match?(video_regex, filepath) -> "video"
+      Regex.match?(doc_regex, filepath) -> "docs"
+      Regex.match?(compressed_regex, filepath) -> "compressed"
+      Regex.match?(subtitle_regex, filepath) -> "subtitle"
+      true -> nil
+    end
+  end
+
   def arrange_file(filepath) do
     list_all(filepath)
     |> Enum.map(fn filepath ->
@@ -8,45 +26,14 @@ defmodule OrganizeFile do
         filepath = String.downcase(filepath)
         IO.puts("file path processing >>>>>>>< #{filepath}")
 
-        cond do
-          String.ends_with?(filepath, "mkv") or String.ends_with?(filepath, "mov") or
-            String.ends_with?(filepath, "avi") or
-            String.ends_with?(filepath, "wmv") or String.ends_with?(filepath, "avchd") or
-            String.ends_with?(filepath, "mp4") or
-            String.ends_with?(filepath, "webm") or String.ends_with?(filepath, "flv") ->
-            # move file to videos folder
-            mv(filepath, "videos")
-
-          String.ends_with?(filepath, "srt") ->
-            # move file to subtitles folder
-            mv(filepath, "subtitles")
-
-          String.ends_with?(filepath, ".zip") or String.ends_with?(filepath, ".tar") or
-              String.ends_with?(filepath, ".gz") ->
-            # move file to compressed folder
-            mv(filepath, "compressed")
-
-          String.ends_with?(filepath, "jpg") or String.ends_with?(filepath, "jpeg") or
-            String.ends_with?(filepath, "png") or String.ends_with?(filepath, "gif") or
-            String.ends_with?(filepath, "raw") or String.ends_with?(filepath, "tiff") ->
-            # move file to pictures folder
-            mv(filepath, "pictures")
-
-          String.ends_with?(filepath, "mp3") or String.ends_with?(filepath, "m4a") or
-            String.ends_with?(filepath, "flac") or String.ends_with?(filepath, "wav") or
-            String.ends_with?(filepath, "wma") or String.ends_with?(filepath, "aac") ->
-            # move file to music folder
-            mv(filepath, "music")
-
-          String.ends_with?(filepath, "pdf") or String.ends_with?(filepath, "doc") or
-            String.ends_with?(filepath, "docx") or String.ends_with?(filepath, "oform") or
-            String.ends_with?(filepath, "docxf") or String.ends_with?(filepath, "xlsx") or
-            String.ends_with?(filepath, "pptx") or String.ends_with?(filepath, "odt") ->
-            # move file to documents folder
-            mv(filepath, "documents")
-
-          true ->
-            nil
+        case determine_file_type(filepath) do
+          "image" -> mv(filepath, "pictures")
+          "video" -> mv(filepath, "videos")
+          "music" -> mv(filepath, "music")
+          "docs" -> mv(filepath, "documents")
+          "compressed" -> mv(filepath, "compressed")
+          "subtitle" -> mv(filepath, "subtitles")
+          _ -> nil
         end
       end)
     end)

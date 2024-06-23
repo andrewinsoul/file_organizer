@@ -5,7 +5,6 @@ defmodule FlatFiles do
   end
 
   defp _list_all(filepath) do
-    IO.puts("tracing >>> #{filepath}")
     cond do
       String.starts_with?(filepath, ".") -> []
       true -> expand(File.ls(filepath), filepath)
