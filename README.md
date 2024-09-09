@@ -1,6 +1,6 @@
 # FileOrganizer
 
-**TODO: Organize files in a directory with file__organizer CLI built with Elixir**
+**Description: Organize files in a directory with file__organizer CLI built with Elixir**
 
 ## Installation
 
